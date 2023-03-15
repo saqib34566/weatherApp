@@ -4,6 +4,7 @@ import { h, Component } from 'preact';
 // import required Components from 'components/'
 import Iphone from './iphone';
 import Ipad from './ipad';
+import Forecast from './forecast';
 
 export default class App extends Component {
 //var App = React.createClass({
