@@ -1,16 +1,53 @@
 @import '~style/helpers';
 
-.container { 
+.background-sunny {
 	display: flex;
 	flex-direction: column;
-	background-image: url('../../assets/backgrounds/greenBackground.jpg');
-	color: #fff;
+	color:  #A7C7E7;
 	width: 414px;
 	height: 736px;
 	text-align: center;
 	padding-top: 80px;
 	margin: 0 auto;
-}
+	background-image: url('../../assets/backgrounds/clear-iphone.jpg');
+  }
+  
+  .background-cloudy {
+	display: flex;
+	flex-direction: column;
+	color:  #A7C7E7;
+	width: 414px;
+	height: 736px;
+	text-align: center;
+	padding-top: 80px;
+	margin: 0 auto;
+	background-image:url('../../assets/backgrounds/cloud.gif');
+  }
+  
+  .background-rainy {
+	display: flex;
+	flex-direction: column;
+	color:  #A7C7E7;
+	width: 414px;
+	height: 736px;
+	text-align: center;
+	padding-top: 80px;
+	margin: 0 auto;
+	background-image:url('../../assets/backgrounds/rain.gif');
+  }
+  
+  .background-snowy {
+	display: flex;
+	flex-direction: column;
+	color:  #A7C7E7;
+	width: 414px;
+	height: 736px;
+	text-align: center;
+	padding-top: 80px;
+	margin: 0 auto;
+	background-image: url('../../assets/backgrounds/snow.gif');
+  }
+
 .header {
 	display: flex;
 	flex-direction: column;
@@ -23,10 +60,12 @@
 	flex: 1;
 	font-size: 1.7em;
 	font-weight: 400;	
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 .conditions {
 	flex: 1;
 	font-size: 1em;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 .temperature {
 	flex: 2;
@@ -34,6 +73,7 @@
 	font-size: 4.8em;
 	font-weight: 300;
 	letter-spacing: -12px;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 .filled:after {
 	content: "°";
