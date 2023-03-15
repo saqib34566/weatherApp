@@ -21,8 +21,8 @@ export default class Iphone extends Component {
 		this.state.cond = "";
 		this.state.bgClass = "";
 		// button display state
-		this.setState({ display: true });
-		this.fetchWeatherData()
+		this.fetchWeatherData();
+		setInterval(this.fetchWeatherData(), 60000); //Refreshes weather data every 60 seconds
 	}
 
 	componentDidMount(){
@@ -31,7 +31,7 @@ export default class Iphone extends Component {
 			navigator.geolocation.getCurrentPosition(
 				position => {
 					const {latitude, longitude} = position.coords;
-					this.fetchWeatherData(latitude, longitude); 
+					this.fetchWeatherData(latitude, longitude);
 				},
 				error => console.log(error)
 			);
@@ -41,15 +41,21 @@ export default class Iphone extends Component {
 	}
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = (latitude, longitude) => {
-		const apiKey = "a11a125eccd08918de831c6cd39c6d9e"
+		const apiKey = "a11a125eccd08918de831c6cd39c6d9e";
 		// API URL with a structure of : http://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+		const openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+		const openMateoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode`;
 		$.ajax({
-			url: url,
+			url: openWeatherUrl,
 			dataType: "jsonp",
-			success : this.parseResponse,
+			success : this.openWeatherParseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
-		})
+		});
+		$.ajax({
+			url: openMateoUrl,
+			success : this.openMateoParseResponse,
+			error : function(req, err){ console.log('API call failed ' + err); }
+		});
 		// once the data grabbed, hide the button
 		this.setState({ display: false });
 	}
@@ -73,7 +79,7 @@ export default class Iphone extends Component {
 		);
 	}
 
-	parseResponse = (parsed_json) => {
+	openWeatherParseResponse = (parsed_json) => {
 		var location = parsed_json['name'];
     	var temp_c = parsed_json['main']['temp'] - 273.15;
     	var temp_f = (temp_c * 1.8) + 32;
@@ -94,10 +100,20 @@ export default class Iphone extends Component {
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
-			tempc: `${temp_c.toFixed(1)}°C`,
-			tempf: `${temp_f.toFixed(1)}°F`,
+			tempc: `${temp_c.toFixed(0)}°C`,
+			tempf: `${temp_f.toFixed(0)}°F`,
 			cond: conditions,
 			bgClass: bgClass
 		});      
-	  }
+	}
+	  
+	openMateoParseResponse = (parsed_json) => {
+		var forecastTemps = [];// <---------- THE ARRAY I WAS TALKING ABOUT
+
+		//Fills forecastTemps with forecasted temperatures
+		for (var i in parsed_json['hourly']['temperature_2m'])
+			forecastTemps.push([i, parsed_json['hourly']['temperature_2m'][i]]);
+		
+		console.log(forecastTemps);
+	}
 }
