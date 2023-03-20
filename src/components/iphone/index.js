@@ -17,16 +17,24 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
-		this.state.tempf = "";
-		this.state.tempc = "";
-		this.state.locate = "";
-		this.state.cond = "";
-		this.state.bgClass = "";
-		this.state.currentIcon = "";
-		this.state.hourlyForecast = [];
-		this.state.dailyForecast = [];
-		// button display state
+		//Default States
+		this.state = {
+			//Temperature states
+			tempf: "0 °F",
+			tempc: "0 °C",
+			//Location state
+			locate: "London",
+			//Condition state
+			cond: "sunny",
+			//Background state
+			bgClass: "background-sunny",
+			//Current weather icon state
+			currentIcon: "https://openweathermap.org/img/wn/01d@2x.png",
+			//Forecast Arrays
+			hourlyForecast: [],
+			dailyForecast: []
+		};
+		
 	}
 
 	componentDidMount(){
@@ -130,7 +138,7 @@ export default class Iphone extends Component {
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
-			tempc: `${temp_c.toFixed(0)}°C`,
+			tempc: `${temp_c.toFixed(0)} °C`,
 			//tempf: `${temp_f.toFixed(0)}°F`,
 			cond: conditions,
 			currentIcon: `https://openweathermap.org/img/wn/${currentIcon}@2x.png`,
