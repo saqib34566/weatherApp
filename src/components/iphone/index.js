@@ -138,7 +138,7 @@ export default class Iphone extends Component {
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
-			tempc: `${temp_c.toFixed(0)} °C`,
+			tempc: `${temp_c.toFixed(0)} °`,
 			//tempf: `${temp_f.toFixed(0)}°F`,
 			cond: conditions,
 			currentIcon: `https://openweathermap.org/img/wn/${currentIcon}@2x.png`,
