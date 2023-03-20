@@ -9,6 +9,7 @@ import $ from 'jquery';
 import Button from '../button';
 // import the Forecast component
 import Forecast from '../forecast';
+import WeekForecast from '../weekForecast';
 
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -24,9 +25,8 @@ export default class Iphone extends Component {
 		this.state.bgClass = "";
 		this.state.currentIcon = "";
 		this.state.hourlyForecast = [];
+		this.state.dailyForecast = [];
 		// button display state
-		this.fetchWeatherData();
-		setInterval(this.fetchWeatherData(), 60000); //Refreshes weather data every 60 seconds
 	}
 
 	componentDidMount(){
@@ -36,6 +36,7 @@ export default class Iphone extends Component {
 				position => {
 					const {latitude, longitude} = position.coords;
 					this.fetchWeatherData(latitude, longitude);
+					setInterval(this.fetchWeatherData(latitude, longitude), 60000); //Refreshes weather data every 60 seconds
 				},
 				error => console.log(error)
 			);
@@ -50,9 +51,22 @@ export default class Iphone extends Component {
 				this.setState({
 					//get 5 items from list
 					hourlyForecast: data.list.slice(0, 5)
-					//hourlyForecast: data.list 
 				});
 				console.log(this.state.hourlyForecast);
+			}
+		);
+		fetch(`https://api.openweathermap.org/data/2.5/forecast?q=London&appid=a11a125eccd08918de831c6cd39c6d9e&units=metric`)
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				var newArray = [];
+					for (var i = 0; i < data.list.length; i=i+8) {
+						newArray.push(data.list[i]);
+					}
+				this.setState({
+					//get 5 items from list
+					dailyForecast: newArray
+				});
 			}
 		);
 
@@ -61,21 +75,13 @@ export default class Iphone extends Component {
 	fetchWeatherData = (latitude, longitude) => {
 		const apiKey = "a11a125eccd08918de831c6cd39c6d9e";
 		// API URL with a structure of : http://api.wunderground.com/api/key/feature/q/country-code/city.json
-		//const openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
 		const openWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKey}`;
-		//const openMateoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,weathercode`;
 		$.ajax({
 			url: openWeatherUrl,
 			dataType: "jsonp",
 			success : this.openWeatherParseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		});
-		/*$.ajax({
-			url: openMateoUrl,
-			success : this.openMateoParseResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }
-		});
-		*/
 		// once the data grabbed, hide the button
 		this.setState({ display: false });
 	}
@@ -97,6 +103,7 @@ export default class Iphone extends Component {
 				</div>
 				<div class={ style.details }></div>
 				<Forecast hourlyForecast={this.state.hourlyForecast} / >
+				<WeekForecast dailyForecast={this.state.dailyForecast} / >
 			</div>
 		);
 	}
@@ -129,17 +136,5 @@ export default class Iphone extends Component {
 			currentIcon: `https://openweathermap.org/img/wn/${currentIcon}@2x.png`,
 			bgClass: bgClass
 		});      
-	}
-	  
-	openWeatherHourlyParseResponse = (parsed_json) => {}
-
-	openMateoParseResponse = (parsed_json) => {
-		var forecastTemps = [];// <---------- THE ARRAY I WAS TALKING ABOUT
-
-		//Fills forecastTemps with forecasted temperatures
-		for (var i in parsed_json['hourly']['temperature_2m'])
-			forecastTemps.push([i, parsed_json['hourly']['temperature_2m'][i]]);
-		
-		console.log(forecastTemps);
 	}
 }
