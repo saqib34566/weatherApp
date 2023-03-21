@@ -6,11 +6,8 @@ class PlantSearch extends Component {
     super(props);
     this.state = {
       query: '',
-      common_name: "",
-      watering: "",
-      sunlight: "",
-      cycle:"",
-      loading: false
+      plantInfo: null,
+      loading: false,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,18 +19,19 @@ class PlantSearch extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({ loading: true });
+    this.setState({ loading: true, plantInfo: null });
     const API_KEY = 'sk-NPVh64188e7a9a6cd260';
-    const API_URL = `https://perenual.com/api/species-list?page=1&key=${API_KEY}&q=${encodeURIComponent(this.state.query)}`;
+    const API_URL = `https://perunial.com/api/species-list?page=1&key=${API_KEY}&q=${encodeURIComponent(this.state.query)}`;
     fetchJsonp(API_URL)
       .then(response => response.json())
       .then(data => {
         const plant = data.data[0];
-        const PLANT_INFO_URL = `https://perenual.com/api/species-list?key=${API_KEY}&q=${plant.id}`;
+
+        const PLANT_INFO_URL = `https://perunial.com/api/species-list?key=${API_KEY}&q=${plant.id}`;
         return fetchJsonp(PLANT_INFO_URL).then(response => response.json());
       })
       .then(data => {
-        this.setState({ common_name: data.data, loading: false, watering: data.data, sunlight: data.data, cycle: data.data });
+        this.setState({ plantInfo: data.data, loading: false });
       })
       .catch(error => {
         console.error(error);

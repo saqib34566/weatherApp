@@ -1,5 +1,6 @@
+import {Router, Route, Link} from 'preact-router';
 // import preact
-import { h, render, Component } from 'preact';
+import { h, render, Component} from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
 import style_iphone from '../button/style_iphone';
@@ -10,6 +11,7 @@ import Button from '../button';
 // import the Forecast component
 import Forecast from '../forecast';
 import WeekForecast from '../weekForecast';
+import plantpage from './plantpage';
 
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -112,6 +114,9 @@ export default class Iphone extends Component {
 				<div class={ style.details }></div>
 				<Forecast hourlyForecast={this.state.hourlyForecast} / >
 				<WeekForecast dailyForecast={this.state.dailyForecast} / >
+				<Link href='/plantpage'> 
+				<button> Roshan </button> 
+				</Link>
 			</div>
 		);
 	}
