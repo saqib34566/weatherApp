@@ -40,8 +40,13 @@ export default class Iphone extends Component {
 			currentPage: 1,
 			//Plant Info
 			query: '',
-     		plantInfo: null,
-      		loading: false
+      		loading: false,
+			plantInfo: {
+				scientific_name:"Solanum lycopersicum",
+				family: "Solanaceae",
+				genus: "Solanaceae",
+				native_status: "True"
+			}
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
