@@ -1,5 +1,8 @@
 import { h, Component, render } from 'preact';
 import fetchJsonp from 'fetch-jsonp';
+import style from './style';
+import style_iphone from '../button/style_iphone';
+// import jquery for API calls
 
 class PlantSearch extends Component {
   constructor(props) {
@@ -39,6 +42,8 @@ class PlantSearch extends Component {
       });
   }
 
+  
+
   render() {
     return (
       <div>
@@ -48,13 +53,13 @@ class PlantSearch extends Component {
         </form>
         {this.state.loading && <div>Loading...</div>}
         {this.state.plantInfo && (
-          <div>
-            <h2>{this.state.plantInfo.common_name}</h2>
-            <p>Scientific name: {this.state.plantInfo.scientific_name}</p>
-            <p>Family: {this.state.plantInfo.family}</p>
-            <p>Genus: {this.state.plantInfo.genus}</p>
-            <p>Native status: {this.state.plantInfo.native_status}</p>
-          </div>
+        <div class="plant-info">
+          <h2>{this.state.plantInfo.common_name}</h2>
+          <p>Scientific name: {this.state.plantInfo.scientific_name}</p>
+          <p class="family">Family: {this.state.plantInfo.family}</p>
+          <p class="genus">Genus: {this.state.plantInfo.genus}</p>
+          <p>Native status: {this.state.plantInfo.native_status}</p>
+        </div>
         )}
       </div>
     );
