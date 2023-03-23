@@ -61,4 +61,4 @@ class PlantSearch extends Component {
   }
 }
 
-render(<PlantSearch />, document.body);
+//render(<PlantSearch />, document.body);
