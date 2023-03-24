@@ -12,6 +12,7 @@ import Button from '../button';
 import Forecast from '../forecast';
 import WeekForecast from '../weekForecast';
 import plantpage from './plantpage';
+import fetchJsonp from 'fetch-jsonp';
 
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -34,9 +35,48 @@ export default class Iphone extends Component {
 			currentIcon: "https://openweathermap.org/img/wn/01d@2x.png",
 			//Forecast Arrays
 			hourlyForecast: [],
-			dailyForecast: []
+			dailyForecast: [],
+			//Page State
+			currentPage: 1,
+			//Plant Info
+			query: '',
+      		loading: false,
+			plantInfo: {
+				scientific_name:"Solanum lycopersicum",
+				family: "Solanaceae",
+				genus: "Solanaceae",
+				native_status: "True"
+			}
 		};
-		
+		this.handleClick = this.handleClick.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
+    	this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleInputChange(event) {
+		this.setState({ query: event.target.value });
+	}
+	
+	handleSubmit(event) {
+		event.preventDefault();
+		this.setState({ loading: true, plantInfo: null });
+		const API_KEY = 'sk-NPVh64188e7a9a6cd260';
+		const API_URL = `https://perunial.com/api/species-list?page=1&key=${API_KEY}&q=${encodeURIComponent(this.state.query)}`;
+		fetchJsonp(API_URL)
+		  .then(response => response.json())
+		  .then(data => {
+			const plant = data.data[0];
+	
+			const PLANT_INFO_URL = `https://perunial.com/api/species-list?key=${API_KEY}&q=${plant.id}`;
+			return fetchJsonp(PLANT_INFO_URL).then(response => response.json());
+		  })
+		  .then(data => {
+			this.setState({ plantInfo: data.data, loading: false });
+		  })
+		  .catch(error => {
+			console.error(error);
+			this.setState({ loading: false });
+		  });
 	}
 
 
@@ -111,16 +151,25 @@ export default class Iphone extends Component {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		
-		// display all weather data
-		return (
-				<div class={style[`${this.state.bgClass}`]}>
-				<div class={ style.header }>
-					<div class={ style.city }>{ this.state.locate }</div>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<span class={ tempStyles }>{ this.state.tempc }</span>
-					{/* <span class={ tempStyles }>{ this.state.tempf }</span> */}
-					<img class={style.iconToday} src={this.state.currentIcon} alt="weather icon" />
+		if (this.state.currentPage == 1){
+			// display all weather data
+			return (
+					<div class={style[`${this.state.bgClass}`]}>
+					<div class={ style.header }>
+						<div class={ style.city }>{ this.state.locate }</div>
+						<div class={ style.conditions }>{ this.state.cond }</div>
+						<span class={ tempStyles }>{ this.state.tempc }</span>
+						{/* <span class={ tempStyles }>{ this.state.tempf }</span> */}
+						<img class={style.iconToday} src={this.state.currentIcon} alt="weather icon" />
+					</div>
+					<div class={ style.details }></div>
+					<Forecast hourlyForecast={this.state.hourlyForecast} / >
+					<WeekForecast dailyForecast={this.state.dailyForecast} / >
+					<div>
+					<button onClick={this.handleClick} class={style.button}>Search Plant</button>
+					</div>
 				</div>
+<<<<<<< HEAD
 				<div class={ style.details }></div>
 				<Forecast hourlyForecast={this.state.hourlyForecast} / >
 				<WeekForecast dailyForecast={this.state.dailyForecast} / >
@@ -129,6 +178,45 @@ export default class Iphone extends Component {
 				</div>
 			</div>
 		);
+=======
+			);
+		}
+		else {
+			return (
+				<div class={style[`${this.state.bgClass}`]}>
+				  <form onSubmit={this.handleSubmit}>
+					<input type="text" value={this.state.query} onChange={this.handleInputChange} />
+					<button type="submit">Search</button>
+				  </form>
+				  {this.state.loading && <div>Loading...</div>}
+				  {this.state.plantInfo && (
+					<div>
+					  <h2>{this.state.plantInfo.common_name}</h2>
+					  <p>Scientific name: {this.state.plantInfo.scientific_name}</p>
+					  <p>Family: {this.state.plantInfo.family}</p>
+					  <p>Genus: {this.state.plantInfo.genus}</p>
+					  <p>Native status: {this.state.plantInfo.native_status}</p>
+					</div>
+				  )}
+				  <div>	
+				  <button onClick={this.handleClick} class={style.button}>Weather</button>
+				  </div>
+				</div>
+			  );
+		}
+	}
+
+	handleClick() {
+		console.log("handleclick");
+		// if currentpage is 1, change to 2 and vice versa
+		this.setState({
+			currentPage: this.state.currentPage == 1 ? 2 : 1
+		});
+
+		{/* this.setState({
+			currentPage: 2
+		}); */}
+>>>>>>> 43245045bf58b99c926db4c0f5f035232ea4a65b
 	}
 
 	openWeatherParseResponse = (parsed_json) => {
