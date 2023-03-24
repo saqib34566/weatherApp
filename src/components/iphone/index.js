@@ -155,7 +155,9 @@ export default class Iphone extends Component {
 					<div class={ style.details }></div>
 					<Forecast hourlyForecast={this.state.hourlyForecast} / >
 					<WeekForecast dailyForecast={this.state.dailyForecast} / >
-					<button onClick={this.handleClick} >{this.state.currentPage}</button>
+					<div>
+					<button onClick={this.handleClick} class={style.button}>Search Plant</button>
+					</div>
 				</div>
 			);
 		}
@@ -176,6 +178,9 @@ export default class Iphone extends Component {
 					  <p>Native status: {this.state.plantInfo.native_status}</p>
 					</div>
 				  )}
+				  <div>	
+				  <button onClick={this.handleClick} class={style.button}>Weather</button>
+				  </div>
 				</div>
 			  );
 		}
@@ -183,9 +188,14 @@ export default class Iphone extends Component {
 
 	handleClick() {
 		console.log("handleclick");
+		// if currentpage is 1, change to 2 and vice versa
 		this.setState({
-			currentPage: 2
+			currentPage: this.state.currentPage == 1 ? 2 : 1
 		});
+
+		{/* this.setState({
+			currentPage: 2
+		}); */}
 	}
 
 	openWeatherParseResponse = (parsed_json) => {
