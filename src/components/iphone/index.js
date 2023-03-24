@@ -39,6 +39,8 @@ export default class Iphone extends Component {
 		
 	}
 
+
+
 	componentDidMount(){
 		// Get User Location
 		if (navigator.geolocation){
@@ -96,6 +98,14 @@ export default class Iphone extends Component {
 		this.setState({ display: false });
 	}
 
+
+	switchPage(){
+		var currentURL = window.location.href;
+		var newURL = currentURL + 'plantpage';
+		window.location.href = newURL;
+		return
+	}
+
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
@@ -114,9 +124,9 @@ export default class Iphone extends Component {
 				<div class={ style.details }></div>
 				<Forecast hourlyForecast={this.state.hourlyForecast} / >
 				<WeekForecast dailyForecast={this.state.dailyForecast} / >
-				<Link href='/plantpage'> 
-				<button> Roshan </button> 
-				</Link>
+				<div>
+				<button class={style.button} onClick={()=> this.switchPage()}>Search Plant</button>
+				</div>
 			</div>
 		);
 	}
